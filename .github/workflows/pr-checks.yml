@@ -40,21 +40,29 @@ jobs:
             const additions = pr.additions;
             const deletions = pr.deletions;
             const changes = additions + deletions;
-            
+
             let label = '';
             if (changes < 100) label = 'size/XS';
             else if (changes < 300) label = 'size/S';
             else if (changes < 600) label = 'size/M';
             else if (changes < 1000) label = 'size/L';
             else label = 'size/XL';
-            
-            await github.rest.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: pr.number,
-              labels: [label]
-            });
-            
+
+            try {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                labels: [label]
+              });
+            } catch (error) {
+              if (error.status === 403) {
+                core.warning(`Unable to add PR size label "${label}" because this workflow token does not have label write permission.`);
+              } else {
+                throw error;
+              }
+            }
+
             if (changes > 1000) {
               core.warning('This PR is very large. Consider breaking it into smaller PRs.');
             }
