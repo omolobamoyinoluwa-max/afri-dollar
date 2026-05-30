@@ -5,16 +5,19 @@ Express.js backend API for AfriDollar.
 ## Getting Started
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Set up environment variables:
+
 ```bash
 cp .env.example .env
 ```
 
 3. Run the development server:
+
 ```bash
 npm run dev
 ```

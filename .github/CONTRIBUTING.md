@@ -29,17 +29,20 @@ By participating in this project, you agree to maintain a respectful and inclusi
 
 1. Fork the repository
 2. Clone your fork:
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/afri-dollar.git
    cd afri-dollar
    ```
 
 3. Install dependencies:
+
    ```bash
    npm install
    ```
 
 4. Set up git hooks:
+
    ```bash
    npm run prepare
    ```
@@ -65,16 +68,19 @@ Example: `feature/wallet-integration`
 ### Local Development
 
 1. Start the development server:
+
    ```bash
    npm run dev
    ```
 
 2. Run type checking:
+
    ```bash
    npm run type-check
    ```
 
 3. Run linting:
+
    ```bash
    npm run lint
    ```
@@ -239,10 +245,10 @@ describe('Feature Name', () => {
   it('should do something specific', () => {
     // Arrange
     const input = 'test';
-    
+
     // Act
     const result = functionUnderTest(input);
-    
+
     // Assert
     expect(result).toBe('expected');
   });

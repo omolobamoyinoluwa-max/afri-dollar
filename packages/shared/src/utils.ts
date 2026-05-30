@@ -52,7 +52,11 @@ export function isValidPhoneNumber(phone: string): boolean {
 }
 
 // Truncate address for display
-export function truncateAddress(address: string, startLength: number = 6, endLength: number = 4): string {
+export function truncateAddress(
+  address: string,
+  startLength: number = 6,
+  endLength: number = 4
+): string {
   if (address.length <= startLength + endLength) return address;
   return `${address.substring(0, startLength)}...${address.substring(address.length - endLength)}`;
 }
@@ -66,7 +70,7 @@ export function sleep(ms: number): Promise<void> {
 export async function retry<T>(
   fn: () => Promise<T>,
   maxRetries: number = 3,
-  delay: number = 1000,
+  delay: number = 1000
 ): Promise<T> {
   for (let i = 0; i < maxRetries; i++) {
     try {

@@ -61,5 +61,6 @@ Paste error logs here
 ## Security Impact
 
 <!-- Does this bug have security implications? -->
+
 - [ ] No security impact
 - [ ] Potential security issue (please describe below)

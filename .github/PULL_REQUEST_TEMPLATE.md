@@ -27,9 +27,9 @@ Closes #
 
 <!-- List the specific changes made in this PR -->
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Testing
 
@@ -43,8 +43,8 @@ Closes #
 
 <!-- Describe what was tested -->
 
-- 
-- 
+-
+-
 
 ## Screenshots (if applicable)
 

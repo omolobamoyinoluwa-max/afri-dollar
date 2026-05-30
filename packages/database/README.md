@@ -59,6 +59,7 @@ const user = await prisma.user.create({
 ## Database Schema
 
 The schema includes models for:
+
 - Users
 - Businesses
 - Wallets

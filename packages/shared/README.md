@@ -26,6 +26,7 @@ const type = TRANSACTION_TYPES.DEPOSIT;
 ## Available Exports
 
 ### Types
+
 - `User`
 - `Business`
 - `Wallet`
@@ -35,6 +36,7 @@ const type = TRANSACTION_TYPES.DEPOSIT;
 - `PaginatedResponse`
 
 ### Constants
+
 - `STELLAR_NETWORKS`
 - `STELLAR_HORIZON_URLS`
 - `ASSET_CODES`
@@ -45,6 +47,7 @@ const type = TRANSACTION_TYPES.DEPOSIT;
 - `HTTP_STATUS`
 
 ### Utilities
+
 - `formatCurrency()`
 - `formatDate()`
 - `formatDateTime()`
