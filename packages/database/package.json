@@ -4,6 +4,14 @@
   "description": "Database package for AfriDollar using Prisma",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./src/*": "./src/*"
+  },
   "scripts": {
     "prebuild": "prisma generate",
     "build": "tsc",
@@ -13,7 +21,7 @@
     "migrate:reset": "prisma migrate reset",
     "studio": "prisma studio",
     "seed": "ts-node prisma/seed.ts",
-    "type-check": "tsc --noEmit"
+    "type-check": "prisma generate && tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0"

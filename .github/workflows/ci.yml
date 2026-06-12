@@ -22,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Generate Prisma Client
+        run: cd packages/database && npm run generate
+
       - name: Build packages
         run: npx turbo run build --filter=@afri-dollar/shared --filter=@afri-dollar/database
 
@@ -40,6 +43,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Generate Prisma Client
+        run: cd packages/database && npm run generate
 
       - name: Build packages
         run: npx turbo run build --filter=@afri-dollar/shared --filter=@afri-dollar/database
@@ -65,6 +71,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Generate Prisma Client
+        run: cd packages/database && npm run generate
 
       - name: Build packages
         run: npx turbo run build --filter=@afri-dollar/shared --filter=@afri-dollar/database
@@ -106,6 +115,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Generate Prisma Client
+        run: cd packages/database && npm run generate
 
       - name: Build packages
         run: npx turbo run build --filter=@afri-dollar/shared --filter=@afri-dollar/database
