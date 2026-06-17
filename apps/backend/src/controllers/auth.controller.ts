@@ -2,8 +2,7 @@
  * Auth Controller
  * Handles authentication-related HTTP requests
  */
-import type { Response } from 'express';
-import { z } from 'zod';
+import { Response } from 'express';
 
 import type { AuthRequest } from '../middleware/auth.middleware';
 import { AuthService } from '../services/auth.service';
@@ -16,23 +15,7 @@ import type {
   UserResponse,
 } from '../types';
 
-// Zod validation schemas
-const registerSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  phoneNumber: z.string().optional(),
-});
 
-const loginSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(1, 'Password is required'),
-});
-
-const refreshTokenSchema = z.object({
-  refreshToken: z.string().min(1, 'Refresh token is required'),
-});
 
 /**
  * Map known domain errors to status codes and user-friendly messages
@@ -71,8 +54,7 @@ export const AuthController = {
    */
   async register(req: AuthRequest, res: Response): Promise<void> {
     try {
-      // Validate request body
-      const validatedData: RegisterRequest = registerSchema.parse(req.body);
+      const validatedData = req.body as RegisterRequest;
 
       // Register user
       const result = await AuthService.register(validatedData);
@@ -95,14 +77,7 @@ export const AuthController = {
       };
       res.status(201).json(response);
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({
-          success: false,
-          error: 'Validation error',
-          details: error.errors,
-        });
-        return;
-      }
+
       if (error instanceof Error) {
         // Create audit log for failed registration (non-blocking)
         void AuthService.createAuditLog({
@@ -133,8 +108,7 @@ export const AuthController = {
    */
   async login(req: AuthRequest, res: Response): Promise<void> {
     try {
-      // Validate request body
-      const validatedData: LoginRequest = loginSchema.parse(req.body);
+      const validatedData = req.body as LoginRequest;
 
       // Login user
       const result = await AuthService.login(validatedData);
@@ -157,14 +131,7 @@ export const AuthController = {
       };
       res.status(200).json(response);
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({
-          success: false,
-          error: 'Validation error',
-          details: error.errors,
-        });
-        return;
-      }
+
       if (error instanceof Error) {
         // Create audit log for failed login (non-blocking)
         void AuthService.createAuditLog({
@@ -195,8 +162,7 @@ export const AuthController = {
    */
   async logout(req: AuthRequest, res: Response): Promise<void> {
     try {
-      // Validate request body with Zod
-      const validatedData: RefreshTokenRequest = refreshTokenSchema.parse(req.body);
+      const validatedData = req.body as RefreshTokenRequest;
 
       if (!req.user) {
         res.status(401).json({
@@ -225,14 +191,7 @@ export const AuthController = {
         message: 'Logged out successfully',
       });
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({
-          success: false,
-          error: 'Validation error',
-          details: error.errors,
-        });
-        return;
-      }
+
       if (error instanceof Error) {
         // Create audit log for failed logout (non-blocking)
         if (req.user) {
@@ -266,8 +225,7 @@ export const AuthController = {
    */
   async refresh(req: AuthRequest, res: Response): Promise<void> {
     try {
-      // Validate request body
-      const validatedData: RefreshTokenRequest = refreshTokenSchema.parse(req.body);
+      const validatedData = req.body as RefreshTokenRequest;
 
       // Refresh access token
       const result = await AuthService.refreshAccessToken(validatedData.refreshToken);
@@ -289,14 +247,7 @@ export const AuthController = {
       };
       res.status(200).json(response);
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({
-          success: false,
-          error: 'Validation error',
-          details: error.errors,
-        });
-        return;
-      }
+
       if (error instanceof Error) {
         // Create audit log for failed refresh (non-blocking)
         void AuthService.createAuditLog({

@@ -3,28 +3,10 @@
  * Handles payroll-related HTTP requests
  */
 import type { Response } from 'express';
-import { z } from 'zod';
+import { batchIdParamSchema } from '../utils/validation';
 
 import type { AuthRequest } from '../middleware/auth.middleware';
 import { PayrollService } from '../services/payroll.service';
-
-const createBatchSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  description: z.string().optional(),
-  walletId: z.string().min(1, 'Wallet ID is required'),
-});
-
-const addItemSchema = z.object({
-  recipientAddress: z.string().min(1, 'Recipient address is required'),
-  amount: z.string().min(1, 'Amount is required'),
-  assetCode: z.string().min(1, 'Asset code is required'),
-  assetIssuer: z.string().optional(),
-  memo: z.string().optional(),
-});
-
-const batchIdParamSchema = z.object({
-  id: z.string().min(1, 'Batch ID is required'),
-});
 
 function getErrorResponse(error: Error): { status: number; message: string } {
   const errorMap: Record<string, { status: number; message: string }> = {
@@ -78,15 +60,6 @@ function getErrorResponse(error: Error): { status: number; message: string } {
 }
 
 function handleError(res: Response, error: unknown): void {
-  if (error instanceof z.ZodError) {
-    res.status(400).json({
-      success: false,
-      error: 'Validation error',
-      details: error.errors,
-    });
-    return;
-  }
-
   if (error instanceof Error) {
     const { status, message } = getErrorResponse(error);
     res.status(status).json({
@@ -119,7 +92,7 @@ export const PayrollController = {
       const userId = requireUser(req, res);
       if (!userId) return;
 
-      const validatedData = createBatchSchema.parse(req.body);
+      const validatedData = req.body as any; // Type should be inferrable from schema or created
       const batch = await PayrollService.createPayrollBatch(validatedData, userId);
 
       res.status(201).json({
@@ -170,7 +143,7 @@ export const PayrollController = {
       if (!userId) return;
 
       const { id } = batchIdParamSchema.parse(req.params);
-      const validatedData = addItemSchema.parse(req.body);
+      const validatedData = req.body as any;
       const item = await PayrollService.addPayrollItem(id, validatedData, userId);
 
       res.status(201).json({
