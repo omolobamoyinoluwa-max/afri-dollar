@@ -145,7 +145,7 @@ export const AuthService = {
     const jwtPayload: Omit<JwtPayload, 'iat' | 'exp'> = {
       userId: user.id,
       email: user.email,
-      role: user.role,
+      role: (user as any).role || 'USER',
     };
 
     const accessToken = this.generateAccessToken(jwtPayload);
@@ -201,7 +201,7 @@ export const AuthService = {
     const jwtPayload: JwtPayload = {
       userId: user.id,
       email: user.email,
-      role: user.role,
+      role: (user as any).role || 'USER',
     };
 
     const accessToken = this.generateAccessToken(jwtPayload);

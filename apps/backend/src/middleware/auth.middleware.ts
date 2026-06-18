@@ -3,13 +3,12 @@ import type { Request, Response, NextFunction } from 'express';
 import { AuthService } from '../services/auth.service';
 import { AppError } from '../types';
 import type { JwtPayload } from '../types';
-import { UserRole } from '@prisma/client';
 
 /**
  * Role permissions mapping
  * Defines which permissions each role has access to
  */
-const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
+const ROLE_PERMISSIONS: Record<string, string[]> = {
   ADMIN: ['*'], // Full access
   BUSINESS: [
     'wallet:read',

@@ -1,5 +1,3 @@
-import type { UserRole } from '@prisma/client';
-
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -13,7 +11,7 @@ export interface AuthTokens {
 export interface JwtPayload {
   userId: string;
   email: string;
-  role: UserRole;
+  role: string;
   iat: number;
   exp: number;
 }
