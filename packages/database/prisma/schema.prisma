@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
 // User model for authentication and authorization
 model User {
   id            String    @id @default(cuid())
@@ -21,6 +26,7 @@ model User {
   lastName      String?
   isVerified    Boolean   @default(false)
   isActive      Boolean   @default(true)
+  role          UserRole  @default(USER)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -176,6 +182,31 @@ model ExchangeRate {
   @@unique([fromAsset, toAsset, validFrom])
   @@index([fromAsset, toAsset])
   @@index([isActive])
+}
+
+// Persisted FX quotes for conversion execution
+model ConversionQuote {
+  id          String   @id @default(cuid())
+  quoteId     String   @unique
+
+  fromAsset   String
+  toAsset     String
+  fromAmount  String
+  toAmount    String
+  rate        String
+  source      String
+
+  walletId    String?
+  status      String   @default("pending") // 'pending', 'executed', 'expired'
+  expiresAt   DateTime
+  executedAt  DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([quoteId])
+  @@index([status, expiresAt])
+  @@index([fromAsset, toAsset])
 }
 
 // Audit log for compliance and security

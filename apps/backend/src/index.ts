@@ -7,8 +7,9 @@ import helmet from 'helmet';
 
 import prisma from './config/database';
 import authRouter from './routes/auth.routes';
+import fxRouter from './routes/fx.routes';
 import payrollRouter from './routes/payroll.routes';
-
+import treasuryRouter from './routes/treasury.routes';
 // Load backend-level .env file
 config({ path: path.resolve(__dirname, '../.env') });
 
@@ -39,10 +40,20 @@ app.get('/api/v1', (_req, res) => {
 });
 
 // Auth routes
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 app.use('/api/v1/auth', authRouter);
 
+// FX routes
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+app.use('/api/v1/fx', fxRouter);
+
 // Payroll routes
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 app.use('/api/v1/payroll', payrollRouter);
+
+// Treasury routes (admin only)
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+app.use('/api/v1/treasury', treasuryRouter);
 
 // Database connection check and server start
 async function startServer(): Promise<void> {
