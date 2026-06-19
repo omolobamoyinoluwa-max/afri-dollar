@@ -70,9 +70,50 @@ jobs:
   conflict-check:
     name: Conflict Check
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
     steps:
       - name: Check for merge conflicts
-        uses: eps1lon/actions-label-merge-conflict@v3
+        uses: actions/github-script@v7
         with:
-          dirtyLabel: 'merge-conflict'
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request.number;
+            const labelName = 'merge-conflict';
+
+            // Ensure the label exists
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: labelName });
+            } catch (e) {
+              if (e.status === 404) {
+                await github.rest.issues.createLabel({
+                  owner, repo, name: labelName,
+                  color: 'e11d48', description: 'PR has merge conflicts'
+                });
+              } else { throw e; }
+            }
+
+            // Poll mergeability (GitHub computes it asynchronously)
+            let mergeable = null;
+            for (let i = 0; i < 5 && mergeable === null; i++) {
+              await new Promise(r => setTimeout(r, 3000));
+              const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: prNumber });
+              mergeable = pr.mergeable;
+            }
+
+            const labels = (await github.rest.issues.listLabelsOnIssue({
+              owner, repo, issue_number: prNumber
+            })).data.map(l => l.name);
+
+            if (mergeable === false) {
+              if (!labels.includes(labelName)) {
+                await github.rest.issues.addLabels({ owner, repo, issue_number: prNumber, labels: [labelName] });
+              }
+              core.setFailed('PR has merge conflicts with the base branch.');
+            } else {
+              if (labels.includes(labelName)) {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number: prNumber, name: labelName });
+              }
+              console.log('No merge conflicts detected.');
+            }
