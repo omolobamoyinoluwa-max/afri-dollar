@@ -1,7 +1,3 @@
-/**
- * Type Definitions
- * Contains shared TypeScript types for the backend
- */
 import type { User } from '@prisma/client';
 
 export * from './auth.types';
@@ -44,21 +40,13 @@ export type UserResponse = {
   data: Omit<User, 'passwordHash'>;
 };
 
-export type JwtPayload = {
-  userId: string;
-  email: string;
-  role: string;
-  iat?: number;
-  exp?: number;
-};
-
 export class AppError extends Error {
-  constructor(
-    public status: number,
-    message: string
-  ) {
+  status: number;
+
+  constructor(status: number, message: string) {
     super(message);
-    Object.setPrototypeOf(this, new.target.prototype);
+    this.status = status;
+    this.name = 'AppError';
   }
 }
 
@@ -67,6 +55,7 @@ export interface TokenRefreshData {
   refreshToken: string;
   userId: string;
 }
+
 export interface CreatePayrollBatchOptions {
   name: string;
   walletId: string;
